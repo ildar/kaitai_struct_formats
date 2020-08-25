@@ -6,6 +6,8 @@ meta:
   license: CC0-1.0
   ks-version: 0.8
   endian: le
+  imports:
+    - /network/ble_peripheral/hplus_smartwatch
 doc: |
   Bluetooth ATT is a part of the Bluetooth specification.
   Attribute Profile, page 2288
@@ -64,6 +66,7 @@ enums:
     0xd2: signed_write_command
 
 types:
+  null_type: {}
   error_response:
     doc-ref: https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=457080 page 2301
     seq:
@@ -109,4 +112,9 @@ types:
       - id: attribute_handle
         type: u2
       - id: attribute_value_bytes
-        size-eos: true
+        type:
+          switch-on: attribute_handle
+          cases:
+            0x000e: hplus_smartwatch::device2app
+            0x0011: hplus_smartwatch::app2device
+            _: null_type
